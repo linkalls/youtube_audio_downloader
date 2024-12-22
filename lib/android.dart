@@ -75,11 +75,6 @@ Future<String> downloadAudioUrl(String url) async {
           print('Progress: ${progress * 100}%');
           percentage = progress * 100;
           // 通知の更新
-          FileDownloader().configureNotification(
-            running: TaskNotification('Downloading ',
-                'パーセント:${percentage.toStringAsFixed(2)}% file: {filename} '),
-            progressBar: true,
-          );
         },
         onStatus: (status) => print('Status: $status'));
 
