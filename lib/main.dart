@@ -35,14 +35,6 @@ class MyApp extends StatelessWidget {
               ElevatedButton(
                   onPressed: () async {
                     print(TextController.text);
-                    // var status = await Permission.manageExternalStorage.request();
-                    // if (status.isGranted) {
-                    //   final result =
-                    //       await downloadAudioUrl(TextController.text);
-                    //   print(result);
-                    // } else {
-                    //   print("Permission denied");
-                    // }
                     final result = await downloadAudioUrl(TextController.text);
                     print(result);
                   },

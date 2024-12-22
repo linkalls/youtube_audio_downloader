@@ -20,6 +20,7 @@ Future<String> downloadAudioUrl(String url) async {
     final safeTitle = video.title.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
 
     Directory? downloadDir;
+    double percentage = 0;
 
     if (Platform.isAndroid) {
       // ストレージ権限の確認を強化
@@ -59,14 +60,22 @@ Future<String> downloadAudioUrl(String url) async {
       allowPause: true,
     );
 
-    // Start download, and wait for result. Show progress and status changes
-    // FileDownloader().configureNotification(
-    //     running: TaskNotification('Downloading', 'file: {safeFilename}'),
-    //     complete: TaskNotification('Download finished', 'file: {safeFilename}'),
-    //     progressBar: true);
+    // 通知の設定
+    FileDownloader().configureNotification(
+      running:
+          TaskNotification('Downloading $percentage%', 'file: {filename} '),
+      complete: TaskNotification('Download complete', 'file: {filename}'),
+      error: TaskNotification('Download error', 'file: {filename}'),
+      paused: TaskNotification('Download paused', 'file: {filename}'),
+      progressBar: true,
+      tapOpensFile: true,
+    );
 
     final result = await FileDownloader().download(task,
-        onProgress: (progress) => print('Progress: ${progress * 100}%'),
+        onProgress: (progress) {
+          print('Progress: ${progress * 100}%');
+          percentage = progress * 100;
+        },
         onStatus: (status) => print('Status: $status'));
 
     // Act on the result
