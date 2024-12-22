@@ -55,15 +55,14 @@ Future<String> downloadAudioUrl(String url) async {
       directory: downloadDir.path,
       baseDirectory: BaseDirectory.root,
       updates: Updates.statusAndProgress, // request status and progress updates
-      requiresWiFi: true,
+      requiresWiFi: false,
       retries: 5,
       allowPause: true,
     );
 
     // 通知の設定
     FileDownloader().configureNotification(
-      running:
-          TaskNotification('Downloading $percentage%', 'file: {filename} '),
+      running: TaskNotification('Downloading ', 'file: {filename} '),
       complete: TaskNotification('Download complete', 'file: {filename}'),
       error: TaskNotification('Download error', 'file: {filename}'),
       paused: TaskNotification('Download paused', 'file: {filename}'),
@@ -75,6 +74,12 @@ Future<String> downloadAudioUrl(String url) async {
         onProgress: (progress) {
           print('Progress: ${progress * 100}%');
           percentage = progress * 100;
+          // 通知の更新
+          FileDownloader().configureNotification(
+            running: TaskNotification('Downloading ',
+                'パーセント:${percentage.toStringAsFixed(2)}% file: {filename} '),
+            progressBar: true,
+          );
         },
         onStatus: (status) => print('Status: $status'));
 
